@@ -91,15 +91,16 @@ function game() {
     }
 
     if (ball.y >= height || ball.y <= 0) {
-        if (ball.y >= height) player[1].score++;
-        if (ball.y <= 0) player[0].score++;
+        if (ball.y >= height) {
+		  player[1].score++;
+		  ball.y = height - 5;
+	  } else if (ball.y <= 0) {
+		  player[0].score++;
+		  ball.y = 4;
+	  }
         ball.x = width / 2;
-        ball.y = height / 2;
         pause = true;
         setTimeout(() => {
-            moveBallY = 1;
-            ball.x = width / 2;
-            ball.y = height / 2;
             pause = false;
         }, 750);
         moveBallY *= -1;
