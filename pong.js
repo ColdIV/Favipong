@@ -9,6 +9,7 @@ var moveBallY = 0.25;
 var playerSpeed = 0.25;
 var npcDirection = 1;
 var pause = false;
+var pausedByFocus = false;
 var banner = width;
 var gameMode = null;
 var keys = [];
@@ -107,13 +108,13 @@ function game() {
     }
 
     // Move Ball
-    if (!pause) {
+    if (!pause || !pausedByFocus) {
         ball.x += moveBallX;
         ball.y += moveBallY;
     }
 
     // Move Player 2
-    if (!pause && gameMode === "AI") {
+    if ((!pause || !pausedByFocus) && gameMode === "AI") {
         if (ball.x < player[1].x) npcDirection = -1;
         if (ball.x > player[1].x + player[1].width) npcDirection = 1;
 
@@ -134,7 +135,11 @@ function game() {
     // Update Favicon
     changeFavicon(createImage("image/png"));
     // Update Title
-    document.title = "P1: " + player[0].score + " | P2: " + player[1].score;
+    document.title = (
+        pausedByFocus
+        ? "☕ Pause!"
+        : "P1: " + player[0].score + " | P2: " + player[1].score
+    );
 }
 
 // Controls
@@ -196,9 +201,18 @@ function drawBanner() {
     }
 }
 
+function playOrPause(event) {
+    // var event = event || window.event;
+    pausedByFocus = pause = event.type.toLowerCase() == 'blur' ? true : false;
+}
+
 // Start Game
 function play(mode) {
     document.title = "Favipong";
+
+    window.addEventListener('blur', playOrPause);
+    window.addEventListener('focus', playOrPause);
+
     if (typeof(canvas.getContext) !== undefined) {
         cx = canvas.getContext('2d');
         gameMode = mode;
