@@ -100,6 +100,8 @@ function game() {
 		  ball.y = 4;
 	  }
         ball.x = width / 2;
+        player[0] = {...player[0], x: 6, y: 13 };
+        player[1] = {...player[1], x: 6, y: 1 };
         pause = true;
         setTimeout(() => {
             pause = false;
